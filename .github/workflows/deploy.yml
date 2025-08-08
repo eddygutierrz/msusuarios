@@ -21,21 +21,21 @@ jobs:
     - name: Copiar archivos al VPS
       run: |
         ssh -o StrictHostKeyChecking=no root@77.237.237.126 <<EOF
-          cd /root/impulsofirme/backend/msusuarios
+        cd /root/impulsofirme/backend/msusuarios
+        git pull origin dev
+        if [ ! -d "msusuarios/.git" ]; then
+          rm -rf msusuarios
+          git clone -b dev git@github.com:TU_USUARIO/TU_REPO.git msusuarios
+        else
+          cd msusuarios
+          git reset --hard
+          git clean -fd
           git pull origin dev
-          if [ ! -d "msusuarios/.git" ]; then
-            rm -rf msusuarios
-            git clone -b dev git@github.com:TU_USUARIO/TU_REPO.git msusuarios
-          else
-            cd msusuarios
-            git reset --hard
-            git clean -fd
-            git pull origin dev
-          fi
-          cd /root/impulsofirme/backend/msusuarios
-          ./mvnw clean package -DskipTests
-          cd /root/impulsofirme
-          docker-compose down
-          docker-compose build
-          docker-compose up -d
+        fi
+        cd /root/impulsofirme/backend/msusuarios
+        ./mvnw clean package -DskipTests
+        cd /root/impulsofirme
+        docker-compose down
+        docker-compose build
+        docker-compose up -d
         EOF
