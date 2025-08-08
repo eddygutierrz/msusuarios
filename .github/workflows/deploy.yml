@@ -25,7 +25,7 @@ jobs:
         git pull origin dev
         if [ ! -d "msusuarios/.git" ]; then
           rm -rf msusuarios
-          git clone -b dev git@github.com:TU_USUARIO/TU_REPO.git msusuarios
+          git clone -b dev git@github.com:eddygutierrz/msusuarios.git msusuarios
         else
           cd msusuarios
           git reset --hard
