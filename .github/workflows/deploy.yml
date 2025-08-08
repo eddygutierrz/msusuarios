@@ -1,0 +1,30 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar el repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurar SSH
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Copiar archivos al VPS
+      run: |
+        ssh -o StrictHostKeyChecking=no root@IP_DEL_VPS <<EOF
+          cd /root/impulsofirme
+          git pull origin dev
+          ./mvnw clean package -DskipTests
+          docker-compose down
+          docker-compose build
+          docker-compose up -d
+        EOF
