@@ -20,8 +20,8 @@ jobs:
 
     - name: Copiar archivos al VPS
       run: |
-        ssh -o StrictHostKeyChecking=no root@IP_DEL_VPS <<EOF
-          cd /root/impulsofirme
+        ssh -o StrictHostKeyChecking=no root@77.237.237.126 <<EOF
+          cd /root/impulsofirme/backend/msusuarios
           git pull origin dev
           ./mvnw clean package -DskipTests
           docker-compose down
