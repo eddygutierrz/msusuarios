@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.impulsofirme.msusuarios.app.dto.UserAuthDTO;
 import com.impulsofirme.msusuarios.app.entity.User;
 import com.impulsofirme.msusuarios.app.enums.Role;
 import com.impulsofirme.msusuarios.app.enums.Status;
@@ -41,12 +42,23 @@ public class UserController {
 
     // Obtener usuario por nombre de usuario
     @GetMapping("/username/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+    public ResponseEntity<UserAuthDTO> getUserByUsername(@PathVariable String username) {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("El nombre de usuario no puede estar vacío"); // Error 400
         }
         Optional<User> user = userService.getUserByUsername(username);
-        return ResponseEntity.ok(user.get());
+
+        // Crear UserAuthDTO a partir del User encontrado
+        UserAuthDTO userAuthDTO = new UserAuthDTO(
+            user.get().getId(),
+            user.get().getUsername(),
+            user.get().getPassword(),
+            user.get().getRole(),
+            user.get().getEnabled(),
+            user.get().getToken(),
+            user.get().getOffice()
+        );
+        return ResponseEntity.ok(userAuthDTO);
     }
 
     // Obtener usuarios por rol
