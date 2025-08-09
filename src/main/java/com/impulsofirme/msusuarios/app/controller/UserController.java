@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,8 +42,11 @@ public class UserController {
     // Obtener usuario por nombre de usuario
     @GetMapping("/username/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("El nombre de usuario no puede estar vacío"); // Error 400
+        }
         Optional<User> user = userService.getUserByUsername(username);
-        return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(user.get());
     }
 
     // Obtener usuarios por rol
