@@ -23,16 +23,16 @@ jobs:
         ssh -o StrictHostKeyChecking=no root@77.237.237.126 <<EOF
         cd /root/impulsofirme/backend
         git pull origin dev
-        if [ ! -d "msusuarios/.git" ]; then
-          rm -rf msusuarios
-          git clone -b dev git@github.com:eddygutierrz/msusuarios.git msusuarios
+        if [ ! -d "msauth/.git" ]; then
+          rm -rf msauth
+          git clone -b dev https://github.com/eddygutierrz/msauth.git msauth
         else
-          cd msusuarios
+          cd msauth
           git reset --hard
           git clean -fd
           git pull origin dev
         fi
-        cd /root/impulsofirme/backend/msusuarios
+        cd /root/impulsofirme/backend/msauth
         ./mvnw clean package -DskipTests
         cd /root/impulsofirme
         docker-compose down
