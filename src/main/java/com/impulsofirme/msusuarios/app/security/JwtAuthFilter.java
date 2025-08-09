@@ -35,6 +35,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // 1) Permitir explícitamente endpoints públicos
         if (path.startsWith("/api/users/auth/") ||
+            path.startsWith("/api/users/register") ||
+            path.equals("/api/users/bootstrap") ||
+            path.equals("/api/users/bootstrap/") ||
             path.startsWith("/actuator/health")) {
             chain.doFilter(req, res);
             return;

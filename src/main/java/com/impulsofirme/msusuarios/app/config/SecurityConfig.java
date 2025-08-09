@@ -18,7 +18,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(c -> c.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/users/auth/**", "/actuator/health").permitAll()
+                .requestMatchers(
+                    "/api/users/auth/**",
+                    "/api/users/bootstrap", 
+                    "/actuator/health").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthFilter(jwt), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
