@@ -1,4 +1,4 @@
-package com.impulsofirme.msusuarios.app.config;
+package com.impulsofirme.msusuarios.app.global;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

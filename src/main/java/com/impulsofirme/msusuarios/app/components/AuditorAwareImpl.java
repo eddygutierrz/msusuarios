@@ -1,4 +1,4 @@
-package com.impulsofirme.msusuarios.app.config;
+package com.impulsofirme.msusuarios.app.components;
 
 import java.util.Optional;
 
