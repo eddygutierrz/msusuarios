@@ -116,6 +116,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>msusuarios</finalName>
 	</build>
 
 </project>
