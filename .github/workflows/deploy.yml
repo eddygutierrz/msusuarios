@@ -19,9 +19,13 @@ jobs:
           java-version: '21'
 
       - name: Build JAR (msusuarios)
-        run: |
-          mvn -q -DskipTests -f pom.xml clean package
+        run: mvn -q -DskipTests clean package
         working-directory: .
+
+      - name: Verificar artefactos
+        run: |
+          ls -lah
+          ls -lah target || true
 
       - name: Upload JAR to VPS
         uses: appleboy/scp-action@v0.1.7
@@ -30,7 +34,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           port: ${{ secrets.VPS_SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "target/msusuarios-*.jar"
+          source: "target/msusuarios.jar"
           target: "/root/impulsofirme/backend/msusuarios/"
           overwrite: true
 
@@ -44,19 +48,10 @@ jobs:
           script: |
             set -e
             cd /root/impulsofirme/backend/msusuarios
-            # Si por error app.jar era un directorio, elimínalo:
             [ -d app.jar ] && rm -rf app.jar
-            # Deja exactamente un app.jar
             rm -f app.jar
-            mv msusuarios-*.jar app.jar
-
+            mv msusuarios.jar app.jar
+    
             cd /root/impulsofirme
-            # Variante sin build (montando app.jar con volumes):
-            docker compose up -d msusuarios
-
-            # Si usas Dockerfile que hace COPY app.jar, cambia por:
-            # docker compose build msusuarios
-            # docker compose up -d msusuarios
-
-            # Mostrar logs de arranque
+            docker-compose up -d msusuarios
             docker logs msusuarios --tail=80
