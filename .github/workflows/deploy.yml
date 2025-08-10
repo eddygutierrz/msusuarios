@@ -46,12 +46,16 @@ jobs:
           port: ${{ secrets.VPS_SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            set -e
+            set -euxo pipefail
             cd /root/impulsofirme/backend/msusuarios
+      
+            # si por error app.jar es un directorio, bórralo
             [ -d app.jar ] && rm -rf app.jar
+      
             rm -f app.jar
             mv msusuarios.jar app.jar
-    
+            ls -lh app.jar
+      
             cd /root/impulsofirme
-            docker-compose up -d msusuarios
+            docker compose up -d msusuarios
             docker logs msusuarios --tail=80
