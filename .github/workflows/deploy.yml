@@ -45,6 +45,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
+            cd /root/impulsofirme/backend/msusuarios
+            rm -f app.jar
+            mv msusuarios-*.jar app.jar
+
             cd /root/impulsofirme
             docker-compose up -d msusuarios
-            docker-compose ps
+            docker logs msusuarios -f --tail 100
