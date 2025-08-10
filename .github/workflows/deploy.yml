@@ -37,6 +37,7 @@ jobs:
           source: "target/msusuarios.jar"
           target: "/root/impulsofirme/backend/msusuarios/"
           overwrite: true
+          strip_components: 1
 
       - name: Restart msusuarios on VPS
         uses: appleboy/ssh-action@v1.2.0
