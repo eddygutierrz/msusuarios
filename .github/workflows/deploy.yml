@@ -32,7 +32,7 @@ jobs:
           port: ${{ secrets.VPS_SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "target/msusuarios-*.jar"
-          target: "/root/impulsofirme/backend/msusuarios/app.jar"
+          target: "/root/impulsofirme/backend/msusuarios/"
           overwrite: true
 
       # Reinicia SOLO el servicio msauth
