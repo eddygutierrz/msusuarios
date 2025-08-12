@@ -62,7 +62,7 @@ insert into screens (id, menu_id, name, path, ord) values
     (11, 4, 'Cartera Activa',       '/reports/credits/active', 10),
     (12, 4, 'Cartera Vencida',      '/reports/credits/overdue', 20),
     (13, 4, 'Cartera Liquidada',    '/reports/credits/settled', 30),
-    (14, 4, 'Pagos próximos',       '/reports/next-payments', 40)
+    (14, 4, 'Pagos próximos',       '/reports/next-payments', 40),
   -- Comisiones
     (15, 5, 'Comisiones',           '/commissions', 10),
   -- Usuarios
