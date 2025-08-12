@@ -48,7 +48,7 @@ insert into screens (id, menu_id, name, path, ord) values
   -- Clientes
     (1, 1, 'Captura',               '/clients/new', 10),
     (2, 1, 'Modificar',             '/clients/update', 20),
-    (3, 1, 'Listas',                '/clients/lists', 30)
+    (3, 1, 'Listas',                '/clients/lists', 30),
   -- Créditos
     (4, 2, 'Captura',               '/credits/new', 10),
     (5, 2, 'Check List',            '/credits/check-list', 20),
@@ -70,7 +70,7 @@ insert into screens (id, menu_id, name, path, ord) values
     (17, 6, 'Modificación',         '/users/update', 20),
   -- Especiales
     (25, 7, 'Garantia Liquida',     '/specials/new', 10),
-    (26, 7, 'Configuración',        '/specials/configuration', 20)
+    (26, 7, 'Configuración',        '/specials/configuration', 20),
     (27, 7, 'Traspasos Creditos',   '/specials/credits-transfer', 30);
 on conflict (id) do nothing;
 
@@ -98,7 +98,7 @@ insert into role_screens (role, screen_id) values
     ('SISTEMAS', 25),
     ('SISTEMAS', 26),
     ('SISTEMAS', 27);
-on conflict (id) do nothing;
+on conflict (role,screen_id) do nothing;
 
 -- DIRECTOR
 insert into role_screens (role, screen_id) values
@@ -122,7 +122,7 @@ insert into role_screens (role, screen_id) values
     ('DIRECTOR', 25),
     ('DIRECTOR', 26),
     ('DIRECTOR', 27);
-on conflict (id) do nothing;
+on conflict (role,screen_id) do nothing;
 
 -- GERENTE
 insert into role_screens (role, screen_id) values
@@ -138,7 +138,7 @@ insert into role_screens (role, screen_id) values
     ('GERENTE', 12),
     ('GERENTE', 13),
     ('GERENTE', 14);
-on conflict (id) do nothing;
+on conflict (role,screen_id) do nothing;
 
 -- ANALISTA
 insert into role_screens (role, screen_id) values
@@ -165,7 +165,7 @@ insert into role_screens (role, screen_id) values
     -- Especiales
     ('ANALISTA', 25),
     ('ANALISTA', 27);
-on conflict (id) do nothing;
+on conflict (role,screen_id) do nothing;
 
 -- ADMINISTRADOR 
 insert into role_screens (role, screen_id) values
@@ -183,7 +183,7 @@ insert into role_screens (role, screen_id) values
     ('ADMINISTRADOR', 12),
     ('ADMINISTRADOR', 13),
     ('ADMINISTRADOR', 14);
-on conflict (id) do nothing;
+on conflict (role,screen_id) do nothing;
 
 -- EJECUTIVO
 insert role_screens (role, screen_id) values
@@ -198,4 +198,4 @@ insert role_screens (role, screen_id) values
     ('EJECUTIVO', 12),
     ('EJECUTIVO', 13),
     ('EJECUTIVO', 14);
-on conflict (id) do nothing;
+on conflict (role,screen_id) do nothing;
