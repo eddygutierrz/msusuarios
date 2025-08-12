@@ -1,4 +1,38 @@
--- Secciones
+-- 1) Secciones del menú
+CREATE TABLE IF NOT EXISTS menu_sections (
+  id        BIGINT PRIMARY KEY,
+  section   VARCHAR(120) NOT NULL,
+  icon      VARCHAR(60),
+  url       VARCHAR(200),
+  ord       INT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_menu_sections_ord ON menu_sections(ord);
+
+-- 2) Pantallas (screens) pertenecen a una sección
+CREATE TABLE IF NOT EXISTS screens (
+  id        BIGINT PRIMARY KEY,
+  menu_id   BIGINT NOT NULL REFERENCES menu_sections(id) ON DELETE CASCADE,
+  name      VARCHAR(160) NOT NULL,
+  path      VARCHAR(300) NOT NULL,
+  ord       INT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_screens_menu ON screens(menu_id);
+CREATE INDEX IF NOT EXISTS idx_screens_ord  ON screens(ord);
+
+-- 3) Permisos por rol (usa nombres del enum como texto)
+CREATE TABLE IF NOT EXISTS role_screens (
+  role      VARCHAR(50) NOT NULL,
+  screen_id BIGINT      NOT NULL REFERENCES screens(id) ON DELETE CASCADE,
+  PRIMARY KEY (role, screen_id)
+);
+
+- Secciones
 insert into menu_sections (id, section, icon, url, ord) values
     (1, 'Clientes',   'users',        'clients',      10),
     (2, 'Créditos',   'credit-card',  'credits',      20),
