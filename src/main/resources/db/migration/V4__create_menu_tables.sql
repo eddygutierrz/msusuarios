@@ -40,7 +40,7 @@ insert into menu_sections (id, section, icon, url, ord) values
     (4, 'Reportes',   'cog',          'settings',     40),
     (5, 'Comisiones', 'cog',          'settings',     50),
     (6, 'Usuarios',   'users',        'users',        60),
-    (7, 'Especiales', 'cog',          'settings',     70);
+    (7, 'Especiales', 'cog',          'settings',     70)
 on conflict (id) do nothing;
 
 -- Pantallas
@@ -71,7 +71,7 @@ insert into screens (id, menu_id, name, path, ord) values
   -- Especiales
     (25, 7, 'Garantia Liquida',     '/specials/new', 10),
     (26, 7, 'Configuración',        '/specials/configuration', 20),
-    (27, 7, 'Traspasos Creditos',   '/specials/credits-transfer', 30);
+    (27, 7, 'Traspasos Creditos',   '/specials/credits-transfer', 30)
 on conflict (id) do nothing;
 
 -- Permisos por rol (usa tu enum Role: EJECUTIVO, ADMINISTRADOR, GERENTE, ANALISTA, DIRECTOR, SISTEMAS)
@@ -97,7 +97,7 @@ insert into role_screens (role, screen_id) values
     ('SISTEMAS', 17),
     ('SISTEMAS', 25),
     ('SISTEMAS', 26),
-    ('SISTEMAS', 27);
+    ('SISTEMAS', 27)
 on conflict (role,screen_id) do nothing;
 
 -- DIRECTOR
@@ -121,7 +121,7 @@ insert into role_screens (role, screen_id) values
     ('DIRECTOR', 17),
     ('DIRECTOR', 25),
     ('DIRECTOR', 26),
-    ('DIRECTOR', 27);
+    ('DIRECTOR', 27)
 on conflict (role,screen_id) do nothing;
 
 -- GERENTE
@@ -137,7 +137,7 @@ insert into role_screens (role, screen_id) values
     ('GERENTE', 11),
     ('GERENTE', 12),
     ('GERENTE', 13),
-    ('GERENTE', 14);
+    ('GERENTE', 14)
 on conflict (role,screen_id) do nothing;
 
 -- ANALISTA
@@ -164,7 +164,7 @@ insert into role_screens (role, screen_id) values
     ('ANALISTA', 17),
     -- Especiales
     ('ANALISTA', 25),
-    ('ANALISTA', 27);
+    ('ANALISTA', 27)
 on conflict (role,screen_id) do nothing;
 
 -- ADMINISTRADOR 
@@ -182,7 +182,7 @@ insert into role_screens (role, screen_id) values
     ('ADMINISTRADOR', 11),
     ('ADMINISTRADOR', 12),
     ('ADMINISTRADOR', 13),
-    ('ADMINISTRADOR', 14);
+    ('ADMINISTRADOR', 14)
 on conflict (role,screen_id) do nothing;
 
 -- EJECUTIVO
@@ -197,5 +197,5 @@ insert role_screens (role, screen_id) values
     ('EJECUTIVO', 11),
     ('EJECUTIVO', 12),
     ('EJECUTIVO', 13),
-    ('EJECUTIVO', 14);
+    ('EJECUTIVO', 14)
 on conflict (role,screen_id) do nothing;
