@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.*;
 
+import java.time.Duration;
 import java.util.List;
 
 @Configuration
@@ -15,29 +16,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtTokenProvider jwt) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .cors(c -> c.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/users/auth/**",
-                    "/api/users/bootstrap", 
-                    "/actuator/health").permitAll()
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(new JwtAuthFilter(jwt), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
+          .csrf(csrf -> csrf.disable())
+          .cors(c -> c.configurationSource(corsConfigurationSource()))
+          .authorizeHttpRequests(auth -> auth
+              .requestMatchers(
+                  "/api/users/auth/**"
+              ).permitAll()
+              .anyRequest().authenticated()
+          )
+          .addFilterBefore(new JwtAuthFilter(jwt),
+              org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        var cfg = new CorsConfiguration();
-        cfg.setAllowedOriginPatterns(List.of("*")); // en prod, pon tus dominios
+        CorsConfiguration cfg = new CorsConfiguration();
+        // Orígenes EXACTOS
+        cfg.setAllowedOrigins(List.of(
+            "https://admin-portal.impulsofirme.com.mx",
+            "http://localhost:4000"  // solo para dev
+        ));
         cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
         cfg.setAllowedHeaders(List.of("Authorization","Content-Type","Cache-Control"));
-        cfg.setAllowCredentials(true);
+        // Con JWT en Authorization NO necesitamos cookies:
+        cfg.setAllowCredentials(false);
+        cfg.setMaxAge(Duration.ofHours(1));
 
-        var source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);
         return source;
     }
