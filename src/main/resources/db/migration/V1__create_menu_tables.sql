@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS role_screens (
   PRIMARY KEY (role, screen_id)
 );
 
-- Secciones
+-- Secciones
 insert into menu_sections (id, section, icon, url, ord) values
     (1, 'Clientes',   'users',        'clients',      10),
     (2, 'Créditos',   'credit-card',  'credits',      20),
