@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "menus")
+@Table(name = "menu_sections")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class MenuSection {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
