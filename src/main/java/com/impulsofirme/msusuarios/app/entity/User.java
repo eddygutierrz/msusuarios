@@ -1,5 +1,6 @@
 package com.impulsofirme.msusuarios.app.entity;
 
+import com.impulsofirme.msusuarios.app.enums.Office;
 import com.impulsofirme.msusuarios.app.enums.Role;
 import com.impulsofirme.msusuarios.app.enums.Status;
 
@@ -32,8 +33,7 @@ public class User extends Auditable {
     @Enumerated(EnumType.STRING)
     private Status enabled;
     private String token;
-    @ManyToOne
-	@JoinColumn(name = "office_id")
+    @Enumerated(EnumType.STRING)
     private Office office;
 
     // PERSONAL FIELD

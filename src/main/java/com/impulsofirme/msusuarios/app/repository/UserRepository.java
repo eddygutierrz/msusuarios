@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.impulsofirme.msusuarios.app.entity.User;
+import com.impulsofirme.msusuarios.app.enums.Office;
 import com.impulsofirme.msusuarios.app.enums.Role;
 import com.impulsofirme.msusuarios.app.enums.Status;
 
@@ -15,6 +16,9 @@ import com.impulsofirme.msusuarios.app.enums.Status;
 public interface UserRepository extends JpaRepository<User, Long> {
     // Buscar usuario por nombre de usuario
     Optional<User> findByUsername(String username);
+
+    // Buscar usuario por oficina
+    List<User> findByOffice(Office office);
 
     // Buscar usuarios por rol
     List<User> findByRole(Role role);
