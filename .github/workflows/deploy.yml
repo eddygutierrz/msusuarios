@@ -58,5 +58,6 @@ jobs:
             ls -lh app.jar
       
             cd /root/impulsofirme
+            docker compose down msusuarios
             docker compose up -d msusuarios
-            docker logs msusuarios --tail=80
+            docker logs msusuarios --tail=500
