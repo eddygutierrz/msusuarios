@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.impulsofirme.msusuarios.app.entity.User;
@@ -43,6 +44,13 @@ public class UserService {
 
     // Guardar o actualizar un usuario
     public User saveUser(User user) {
+        //Si el usuario tiene un ID, se actualiza; si no, se crea uno nuevo.
+        if (user.getId() == null) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encryptedPassword = passwordEncoder.encode(user.getUsername());
+            user.setPassword(encryptedPassword); // Por defecto, al crear un usuario, se activa.
+            user.setEnabled(Status.ACTIVE); // Establecer estado activo por defecto
+        }
         return userRepository.save(user);
     }
 

@@ -30,44 +30,54 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
-
-        String path = req.getRequestURI();
-
-        // 1) Permitir explícitamente endpoints públicos
-        if (path.startsWith("/api/users/auth/") ||
-            path.startsWith("/api/users/register") ||
-            path.equals("/api/users/bootstrap") ||
-            path.equals("/api/users/bootstrap/") ||
-            path.startsWith("/actuator/health")) {
-            chain.doFilter(req, res);
+        // 1) Preflight CORS pasa libre
+        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
+            res.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
-        // 2) Exigir Authorization
+        // 2) Si no viene Authorization -> 401
         String bearer = req.getHeader(HttpHeaders.AUTHORIZATION);
         if (bearer == null || !bearer.startsWith("Bearer ")) {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
+
         String token = bearer.substring(7).trim();
 
         try {
+            // Lanza si firma inválida o expirado
             Claims claims = jwt.parse(token).getBody();
+
             String username = claims.getSubject();
-            // authorities: ["ROLE_ADMIN","ROLE_USER",...]
             @SuppressWarnings("unchecked")
             List<String> roles = (List<String>) claims.get("authorities");
-            var authorities = roles == null ? List.<SimpleGrantedAuthority>of()
-                    : roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
+            var authorities = (roles == null ? List.<SimpleGrantedAuthority>of()
+                    : roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
             Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
+
             chain.doFilter(req, res);
 
         } catch (Exception e) {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } finally {
-            SecurityContextHolder.clearContext();
+            // ¡Importante!: NO limpiar el contexto aquí.
+            // SecurityContextPersistenceFilter se encargará ciclo a ciclo.
         }
+    }
+
+    /**
+     * Delega cuáles paths NO se filtran al SecurityConfig, pero si quisieras
+     * excluir aquí, podrías usar shouldNotFilter:
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String p = request.getRequestURI();
+        return p.startsWith("/actuator/health")
+            || p.equals("/api/users/bootstrap")
+            || p.startsWith("/api/users/auth/");
     }
 }

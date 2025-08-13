@@ -2,10 +2,10 @@ package com.impulsofirme.msusuarios.app.enums;
 
 public enum Office {
 
-    SAN_ANDRES("SAN ANDRES TUXTLA"),
+    SAN_ANDRES_TUXTLA("SAN ANDRÉS TUXTLA"),
     ACAYUCAN("ACAYUCAN"),
     ACAYUCAN_2("ACAYUCAN 2"),
-    SISTEMAS("CENTRO OPERATIVO");
+    CENTRO_OPERACIONES("CENTRO OPERACIONES");
 
     private final String displayName;
 

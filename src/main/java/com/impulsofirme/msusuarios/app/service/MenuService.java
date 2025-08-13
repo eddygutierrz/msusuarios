@@ -5,17 +5,16 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.impulsofirme.msusuarios.app.dto.MenuDTOs.MenuItemDTO;
 import com.impulsofirme.msusuarios.app.dto.MenuDTOs.MenuSectionDTO;
+import com.impulsofirme.msusuarios.app.entity.MenuSection;
+import com.impulsofirme.msusuarios.app.entity.RoleScreen;
 import com.impulsofirme.msusuarios.app.entity.Screen;
 import com.impulsofirme.msusuarios.app.entity.User;
-import com.impulsofirme.msusuarios.app.enums.Role;
 import com.impulsofirme.msusuarios.app.repository.RoleScreenRepository;
 import com.impulsofirme.msusuarios.app.repository.UserRepository;
 import com.impulsofirme.msusuarios.app.repository.UserScreenRepository;
@@ -27,40 +26,69 @@ import lombok.RequiredArgsConstructor;
 public class MenuService {
     private final UserRepository userRepository;
     private final RoleScreenRepository roleScreenRepository;
-    private final Optional<UserScreenRepository> userScreenRepository;
+    // Si aún no usarás overrides por usuario, comenta esta línea y su uso.
+    private final UserScreenRepository userScreenRepository;
 
     public List<MenuSectionDTO> getAuthorizedMenu(String username) {
         User user = userRepository.findByUsername(username).orElse(null);
         if (user == null) return List.of();
 
-        // 1) Por rol (tu User tiene un solo Role; si luego usas varios roles, aquí combinas)
-        Role role = user.getRole();
-        Set<Screen> screens = roleScreenRepository.findAllByRole(role)
-            .stream().map(rs -> rs.getScreen())
-            .collect(Collectors.toCollection(LinkedHashSet::new));
+        // 1) Pantallas por rol (single‑role)
+        var roleScreens = roleScreenRepository.findAllByRoleFetch(user.getRole());
 
-        // 2) Overrides por usuario (sumar)
-        userScreenRepository.ifPresent(repo -> {
-        repo.findAllByUserId(user.getId()).forEach(us -> screens.add(us.getScreen()));
-        });
+        LinkedHashSet<Screen> screens = roleScreens.stream()
+                .map(RoleScreen::getScreen)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        // 3) Agrupar por sección y ordenar
-        Map<Long, List<Screen>> bySection = screens.stream()
-            .sorted(Comparator.comparing(s -> Optional.ofNullable(s.getOrder()).orElse(0)))
-            .collect(Collectors.groupingBy(s -> s.getMenu().getId(), LinkedHashMap::new, Collectors.toList()));
+        // 2) Overrides por usuario (opcional)
+        if (userScreenRepository != null) {
+            userScreenRepository.findAllByUserIdFetch(user.getId())
+                    .forEach(us -> screens.add(us.getScreen()));
+        }
 
-        // 4) Construir DTOs ordenados por orden de sección
+        if (screens.isEmpty()) return List.of();
+
+        // 3) Agrupar por sección, ordenando sección y pantallas (nulos al final)
+        Map<MenuSection, List<Screen>> bySection = screens.stream()
+                .sorted(Comparator
+                        .comparing((Screen s) -> nullFirst(orderOfMenu(s)))
+                        .thenComparing(s -> nullFirst(s.getOrder()))
+                        .thenComparing(s -> nz(s.getName())))
+                .collect(Collectors.groupingBy(
+                        Screen::getMenu,
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
+
+        // 4) A DTOs
         return bySection.entrySet().stream()
-            .sorted(Comparator.comparing(e ->
-                Optional.ofNullable(e.getValue().get(0).getMenu().getOrder()).orElse(0)))
-            .map(entry -> {
-            var first = entry.getValue().get(0).getMenu();
-            var children = entry.getValue().stream()
-                .sorted(Comparator.comparing(s -> Optional.ofNullable(s.getOrder()).orElse(0)))
-                .map(s -> new MenuItemDTO(s.getName(), s.getPath()))
+                .sorted(Comparator.comparing(e -> nullFirst(e.getKey() != null ? e.getKey().getOrder() : null)))
+                .map(e -> {
+                    MenuSection m = e.getKey();
+                    var items = e.getValue().stream()
+                            .sorted(Comparator
+                                    .comparing((Screen s) -> nullFirst(s.getOrder()))
+                                    .thenComparing(s -> nz(s.getName())))
+                            .map(s -> new MenuItemDTO(s.getName(), s.getPath()))
+                            .toList();
+                    return new MenuSectionDTO(
+                            m != null ? m.getSection() : "General",
+                            m != null ? nz(m.getIcon()) : null,
+                            m != null ? nz(m.getUrl()) : "",
+                            items
+                    );
+                })
                 .toList();
-            return new MenuSectionDTO(first.getSection(), first.getIcon(), first.getUrl(), children);
-            }).toList();
-  }
+    }
 
+    /* helpers */
+    private static Integer orderOfMenu(Screen s) {
+        return (s == null || s.getMenu() == null) ? null : s.getMenu().getOrder();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Comparable<T>> T nullFirst(T v){
+        return v == null ? (T)(Integer)Integer.MIN_VALUE : v;
+    }
+    private static String nz(String s){ return s == null ? "" : s; }
 }

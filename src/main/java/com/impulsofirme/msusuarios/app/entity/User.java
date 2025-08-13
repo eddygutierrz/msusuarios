@@ -1,9 +1,12 @@
 package com.impulsofirme.msusuarios.app.entity;
 
+import java.util.Set;
+
 import com.impulsofirme.msusuarios.app.enums.Office;
 import com.impulsofirme.msusuarios.app.enums.Role;
 import com.impulsofirme.msusuarios.app.enums.Status;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,6 +36,9 @@ public class User extends Auditable {
     private String token;
     @Enumerated(EnumType.STRING)
     private Office office;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "office")
+    private Set<Office> accessibleOffices;
 
     // PERSONAL FIELD
     private String firstname;
