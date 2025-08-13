@@ -20,9 +20,7 @@ public class SecurityConfig {
             .cors(c -> c.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(
-                    "/api/users/auth/**"
-                ).permitAll()
+                .requestMatchers("/api/users/auth/**").permitAll()
                 .anyRequest().authenticated()
           )
           .addFilterBefore(new JwtAuthFilter(jwt),
@@ -40,7 +38,7 @@ public class SecurityConfig {
             "http://localhost:4200"  // solo para dev
         ));
         cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
-        cfg.setAllowedHeaders(List.of("Authorization","Content-Type","Cache-Control"));
+        cfg.setAllowedHeaders(List.of("*"));
         // Con JWT en Authorization NO necesitamos cookies:
         cfg.setAllowCredentials(false);
         cfg.setMaxAge(Duration.ofHours(1));
