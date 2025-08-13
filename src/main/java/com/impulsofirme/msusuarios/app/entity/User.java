@@ -37,7 +37,7 @@ public class User extends Auditable {
     @Enumerated(EnumType.STRING)
     private Office office;
     @Enumerated(EnumType.STRING)
-    @Column(name = "office")
+    @Column(name = "accessibleOffices")
     private Set<Office> accessibleOffices;
 
     // PERSONAL FIELD
