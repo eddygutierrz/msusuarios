@@ -30,12 +30,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
-        // 1) Preflight CORS pasa libre
-        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
-            res.setStatus(HttpServletResponse.SC_OK);
-            return;
-        }
-
         // 2) Si no viene Authorization -> 401
         String bearer = req.getHeader(HttpHeaders.AUTHORIZATION);
         if (bearer == null || !bearer.startsWith("Bearer ")) {
@@ -75,6 +69,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
      */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true; // ⬅️ Ignora completamente preflight en este filtro
+        }
         String p = request.getRequestURI();
         return p.startsWith("/actuator/health")
             || p.equals("/api/users/bootstrap")
