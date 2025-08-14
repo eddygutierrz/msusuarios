@@ -1,18 +1,23 @@
 package com.impulsofirme.msusuarios.app.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import com.impulsofirme.msusuarios.app.enums.Office;
 import com.impulsofirme.msusuarios.app.enums.Role;
 import com.impulsofirme.msusuarios.app.enums.Status;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,16 +34,17 @@ public class User extends Auditable {
     // USER FIELDS
     private String username;
     private String password;
-    @Enumerated(EnumType.STRING)
-    private Role role;
-    @Enumerated(EnumType.STRING)
-    private Status enabled;
+    private String role;
+    private String enabled;
     private String token;
-    @Enumerated(EnumType.STRING)
-    private Office office;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "accessibleOffices")
-    private Set<Office> accessibleOffices;
+    private String office;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+      name = "user_accessible_offices",
+      joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "office", length = 64, nullable = false)
+    private List<String> accessibleOffices = List.of();
 
     // PERSONAL FIELD
     private String firstname;

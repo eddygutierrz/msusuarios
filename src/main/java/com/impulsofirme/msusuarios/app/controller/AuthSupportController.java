@@ -35,8 +35,8 @@ public class AuthSupportController {
             u.getId(), 
             u.getUsername(), 
             u.getPassword(), 
-            u.getRole() != null ? u.getRole().name() : "USER",
-            u.getEnabled() != null ? u.getEnabled().name() : "A",
+            u.getRole(),
+            u.getEnabled(),
             null
         );
 
