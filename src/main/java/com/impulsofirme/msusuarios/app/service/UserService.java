@@ -49,7 +49,7 @@ public class UserService {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encryptedPassword = passwordEncoder.encode(user.getUsername());
             user.setPassword(encryptedPassword); // Por defecto, al crear un usuario, se activa.
-            user.setEnabled(Status.ACTIVE); // Establecer estado activo por defecto
+            user.setEnabled(Status.ACTIVE.toString()); // Establecer estado activo por defecto
         }
         return userRepository.save(user);
     }

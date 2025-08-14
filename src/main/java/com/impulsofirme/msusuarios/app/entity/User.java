@@ -1,18 +1,10 @@
 package com.impulsofirme.msusuarios.app.entity;
 
 import java.util.List;
-import java.util.Set;
-
-import com.impulsofirme.msusuarios.app.enums.Office;
-import com.impulsofirme.msusuarios.app.enums.Role;
-import com.impulsofirme.msusuarios.app.enums.Status;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

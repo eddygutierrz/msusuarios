@@ -37,10 +37,9 @@ public class BootstrapController {
         u.setUsername(username);
         u.setPassword(encoder.encode(password)); // BCRYPT
         // Ajusta estas 2 líneas a tu modelo real (enum/string):
-        u.setRole(Role.valueOf(role.toUpperCase()));
-        u.setEnabled(Status.valueOf(status.toUpperCase()));
+        u.setRole("SISTEMAS");
+        u.setEnabled("ACTIVE");
         u.setEmail(username + "@example.com");
-
         return ResponseEntity.ok(repo.save(u));
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.impulsofirme.msusuarios.app.entity.RoleScreen;
-import com.impulsofirme.msusuarios.app.enums.Role;
 
 public interface RoleScreenRepository extends JpaRepository<RoleScreen, Long> {
     @Query("""
@@ -16,5 +15,5 @@ public interface RoleScreenRepository extends JpaRepository<RoleScreen, Long> {
         join fetch s.menu m
         where rs.role = :role
     """)
-    List<RoleScreen> findAllByRoleFetch(@Param("role") Role role);
+    List<RoleScreen> findAllByRoleFetch(@Param("role") String role);
 }
