@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.impulsofirme.msusuarios.app.entity.User;
-import com.impulsofirme.msusuarios.app.enums.Role;
-import com.impulsofirme.msusuarios.app.enums.Status;
 import com.impulsofirme.msusuarios.app.repository.UserRepository;
 
 @RestController
