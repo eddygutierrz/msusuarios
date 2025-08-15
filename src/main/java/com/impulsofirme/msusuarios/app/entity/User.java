@@ -22,8 +22,8 @@ public class User extends Auditable {
     //ID
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    
     // USER FIELDS
+    @Column(unique = true, nullable = false)
     private String username;
     private String password;
     private String role;

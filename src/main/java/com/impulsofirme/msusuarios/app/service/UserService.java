@@ -68,4 +68,33 @@ public class UserService {
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    // Desactivar o suspender usuario por ID
+    public User disableUserById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setEnabled(Status.INACTIVE.toString()); // Cambiar estado a inactivo
+            userRepository.save(user);
+            return user;
+        }else{
+            throw new IllegalArgumentException("Usuario no encontrado con ID: " + id); // Error 404
+        }
+    }
+
+    // Cambiar contraseña de usuario por ID
+    public User changePassword(Long id, String newPassword) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String encryptedPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(encryptedPassword);
+            return userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("Usuario no encontrado con ID: " + id); // Error 404
+        }
+    }
+
+
 }
