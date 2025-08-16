@@ -111,6 +111,13 @@ public class UserController {
         return ResponseEntity.ok(disabledUser);
     }
 
+    // Activar usuario por ID
+    @PutMapping("/enable/{id}")
+    public ResponseEntity<User> enableUserById(@PathVariable Long id) {
+        User enabledUser = userService.enableUserById(id);
+        return ResponseEntity.ok(enabledUser);
+    }
+
     // Cambiar contraseña de usuario por ID
     @PutMapping("/change-password/{id}")
     public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestBody Map<String, String> passwordData) {
